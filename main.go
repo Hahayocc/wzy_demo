@@ -14,7 +14,7 @@ func main() {
 		//panic(fmt.Sprintf("redis init failed with %+v", err))
 	}
 
-	if err := db.InitMongoDB(); err != nil {
+	i err := db.InitMongoDB(); err != nil {
 		//panic(fmt.Sprintf("mongodb init failed with %+v", err))
 	}
 
