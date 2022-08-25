@@ -8,6 +8,9 @@ import (
 	"net/http"
 )
 
+func panic(v interface{}) {
+}
+
 func main() {
 
 	if err := db.InitRedis(); err != nil {
@@ -28,6 +31,10 @@ func main() {
 	http.HandleFunc("/api/get_os_env", service.GetOsEnvHandler)
 
 	//fmt.Println("have fun")
+	if os.Getenv("flag") == "fail" {
+		panic("crash")
+		fmt.Println("fail")
+	}
 
 	listenPort := ":8000"
 	if listenPort == "" {
