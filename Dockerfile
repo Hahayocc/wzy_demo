@@ -10,4 +10,5 @@ FROM alpine:3.13
 WORKDIR /opt/application
 COPY --from=builder /app/main /app/run.sh /opt/application
 USER root
+ENV flag=success
 CMD /opt/application/run.sh
