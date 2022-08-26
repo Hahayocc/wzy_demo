@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 )
 
 func panic(v interface{}) {
@@ -30,6 +31,7 @@ func main() {
 	http.HandleFunc("/v1/ping", service.PingHandler)
 	http.HandleFunc("/api/get_os_env", service.GetOsEnvHandler)
 
+	//fmt.Println("have fun")
 	fmt.Println("flagflag:", os.Getenv("flag"))
 	listenPort := ":8000"
 	if os.Getenv("flag") != "success" {
@@ -37,6 +39,8 @@ func main() {
 		listenPort = ""
 		fmt.Println("fail")
 	}
+
+	fmt.Println(os.Getenv("flag"))
 
 	if listenPort == "" {
 		log.Fatal("failed to load _FAAS_RUNTIME_PORT")
