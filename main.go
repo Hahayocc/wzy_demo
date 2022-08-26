@@ -30,13 +30,14 @@ func main() {
 	http.HandleFunc("/v1/ping", service.PingHandler)
 	http.HandleFunc("/api/get_os_env", service.GetOsEnvHandler)
 
-	fmt.Println(os.Getenv("flag"))
+	fmt.Println("flagflag:", os.Getenv("flag"))
+	listenPort := ":8000"
 	if os.Getenv("flag") != "success" {
 		panic("crash")
+		listenPort = ""
 		fmt.Println("fail")
 	}
 
-	listenPort := ":8000"
 	if listenPort == "" {
 		log.Fatal("failed to load _FAAS_RUNTIME_PORT")
 	}
