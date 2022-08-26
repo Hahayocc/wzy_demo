@@ -30,7 +30,7 @@ func main() {
 	http.HandleFunc("/v1/ping", service.PingHandler)
 	http.HandleFunc("/api/get_os_env", service.GetOsEnvHandler)
 
-	//fmt.Println("have fun")
+	fmt.Println(os.Getenv("flag"))
 	if os.Getenv("flag") != "success" {
 		panic("crash")
 		fmt.Println("fail")
