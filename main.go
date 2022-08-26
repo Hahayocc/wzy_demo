@@ -31,7 +31,7 @@ func main() {
 	http.HandleFunc("/api/get_os_env", service.GetOsEnvHandler)
 
 	//fmt.Println("have fun")
-	if os.Getenv("flag") == "fail" {
+	if os.Getenv("flag") != "success" {
 		panic("crash")
 		fmt.Println("fail")
 	}
