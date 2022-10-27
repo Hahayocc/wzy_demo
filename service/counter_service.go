@@ -56,7 +56,7 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) {
 
 // testHandlerr 测试接口，返回全部的header和query参数
 func TestHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("Cloud_Env: ", os.Getenv("Cloud_Env"))
+	fmt.Println("CLOUD_ENV: ", os.Getenv("CLOUD_ENV"))
 	data := make(map[string]string)
 	fmt.Println("打印Header参数列表：")
 	if len(r.Header) > 0 {
