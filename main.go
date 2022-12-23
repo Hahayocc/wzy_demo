@@ -2,14 +2,10 @@ package main
 
 import (
 	"code.byted.org/douyincloud-open/configcenter-sdk-golang/base"
-	"fmt"
-	"io/ioutil"
-	"net/http"
-	"time"
-
 	"github.com/Ccc-me/for-golang-test/db/mongodb"
 	"github.com/Ccc-me/for-golang-test/db/mysql"
 	"github.com/Ccc-me/for-golang-test/db/redis"
+	"net/http"
 )
 
 var sdkClient base.Client
@@ -18,13 +14,15 @@ func Init() {
 	mysql.InitMysql()
 	redis.InitRedis()
 	mongodb.InitMongoDB()
-	sdkClient, _ = base.Start()
+	sdkClient = base.Start()
 }
 
 func main() {
 
 	Init()
 	http.HandleFunc("/get_key", GetKey)
+	http.HandleFunc("/get_keys", GetKeys)
+	http.HandleFunc("/update_cache", UpdateCache)
 	http.HandleFunc("/hello", Hello)
 	http.HandleFunc("/headers", Headers)
 	http.HandleFunc("/v1/ping", Ping)
@@ -51,31 +49,6 @@ func main() {
 	http.HandleFunc("/mongodb/insert", MongoInsert)
 	http.HandleFunc("/mongodb/find", MongoFind)
 	http.HandleFunc("/mongodb/delete", MongoDelete)
-	http.HandleFunc("/config", func(w http.ResponseWriter, request *http.Request) {
-		domain := "http://180.184.81.65:8000"
-		path := "/config/ping"
-
-		client := http.Client{Timeout: 4 * time.Second}
-
-		req, err := http.NewRequest(http.MethodGet, domain+path, nil)
-		if err != nil {
-			fmt.Fprint(w, err.Error())
-			return
-		}
-		resp, err := client.Do(req)
-
-		if err != nil {
-			fmt.Fprint(w, err.Error())
-			return
-		}
-		defer resp.Body.Close()
-		followBody, err := ioutil.ReadAll(resp.Body)
-		if err != nil {
-			fmt.Fprint(w, "err 2 "+err.Error())
-			return
-		}
-		fmt.Fprintf(w, string(followBody))
-	})
 
 	http.ListenAndServe(":8000", nil)
 }

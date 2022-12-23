@@ -1,6 +1,7 @@
 package cache
 
 import (
+	"code.byted.org/douyincloud-open/configcenter-sdk-golang/error"
 	"code.byted.org/douyincloud-open/configcenter-sdk-golang/http"
 	"code.byted.org/douyincloud-open/configcenter-sdk-golang/openapi"
 	"context"
@@ -41,7 +42,7 @@ func NewTicker(cache *Cache, ccClient *http.Client, interval time.Duration) *Tic
 	return &Ticker{StopChan: stopChan}
 }
 
-func UpdateCache(cache *Cache, ccClient *http.Client) error {
+func UpdateCache(cache *Cache, ccClient *http.Client) {
 	configVersion := cache.GetVersion()
 	if configVersion == "" {
 		configVersion = "0"
@@ -51,18 +52,27 @@ func UpdateCache(cache *Cache, ccClient *http.Client) error {
 	body := string(jsonByte)
 
 	//TODO: 优化入、出参
-	respBody, _, _, _, err := ccClient.CtxHttpPostRaw(context.Background(), body, nil)
+	respBody, _, err := ccClient.CtxHttpPostRaw(context.Background(), body, nil)
 	if err != nil {
-		return err
+		log.Printf("resp err, err = %v", err)
+		return
 	}
 
 	var resp openapi.GetConfigListResponse
 	var httpResult openapi.HttpResp
 	json.Unmarshal(respBody, &httpResult)
 	resp = httpResult.Data
+	code := httpResult.Code
+	msg := httpResult.Msg
+
+	if code != 0 {
+		err := error.NewErr(2, "request err", code, msg)
+		log.Printf("resp code err, err = %v", err)
+		return
+	}
 
 	if configVersion >= resp.Version {
-		return nil
+		return
 	}
 
 	// 更新缓存
@@ -75,5 +85,5 @@ func UpdateCache(cache *Cache, ccClient *http.Client) error {
 	}
 	cache.Set(items)
 	cache.SetVersion(resp.Version)
-	return nil
+	return
 }

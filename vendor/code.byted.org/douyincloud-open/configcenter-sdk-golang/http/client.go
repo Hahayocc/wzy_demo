@@ -38,11 +38,11 @@ type APIInfo struct {
 }
 
 // HttpPostRaw 发起JSON的post请求
-func (client *Client) HttpPostRaw(body string, headers http.Header) ([]byte, int, string, http.Header, error) {
+func (client *Client) HttpPostRaw(body string, headers http.Header) ([]byte, http.Header, error) {
 	return client.CtxHttpPostRaw(context.Background(), body, headers)
 }
 
-func (client *Client) CtxHttpPostRaw(ctx context.Context, body string, headers http.Header) ([]byte, int, string, http.Header, error) {
+func (client *Client) CtxHttpPostRaw(ctx context.Context, body string, headers http.Header) ([]byte, http.Header, error) {
 	apiInfo := &APIInfo{
 		Method: HttpMethodPost,
 		Body:   body,

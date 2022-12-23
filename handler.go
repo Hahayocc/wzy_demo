@@ -10,12 +10,25 @@ import (
 	"net/http"
 	"os"
 	"strconv"
+	"strings"
 )
 
 func GetKey(w http.ResponseWriter, req *http.Request) {
 	key, _ := ioutil.ReadAll(req.Body)
 	value, _ := sdkClient.Get(string(key))
 	fmt.Fprintf(w, "value = %v\n", value)
+}
+
+func GetKeys(w http.ResponseWriter, req *http.Request) {
+	keys, _ := ioutil.ReadAll(req.Body)
+	list := strings.Fields(string(keys))
+	value, _ := sdkClient.GetKeys(list...)
+	fmt.Fprintf(w, "value = %v\n", value)
+}
+
+func UpdateCache(w http.ResponseWriter, req *http.Request) {
+	sdkClient.UpdateCache()
+	fmt.Fprintf(w, "update cache\n")
 }
 
 func Hello(w http.ResponseWriter, req *http.Request) {
